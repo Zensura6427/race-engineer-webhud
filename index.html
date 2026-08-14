@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Race Engineer WebHUD</title>
+  <style>
+    html,body,#host{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+    iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:transparent}
+  </style>
+</head>
+<body>
+  <div id="host"></div>
+  <script>
+    const host=document.getElementById('host');
+    let frame=null,connected=false,retry=null;
+    function load(){
+      if(connected)return;
+      frame?.remove();
+      frame=document.createElement('iframe');
+      frame.src='http://127.0.0.1:8078/?hosted='+(Date.now());
+      frame.allow='autoplay';
+      host.appendChild(frame);
+      clearTimeout(retry);
+      retry=setTimeout(load,2000);
+    }
+    addEventListener('message',event=>{
+      if(event.data?.source!=='race-engineer-webhud')return;
+      connected=event.data.connected===true;
+      clearTimeout(retry);
+      if(!connected){frame?.remove();frame=null;retry=setTimeout(load,1000)}
+    });
+    load();
+  </script>
+</body>
+</html>
