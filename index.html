@@ -100,6 +100,15 @@ function renderState(s,shown){
   const enabled=el=>config['Show'+el.dataset.id]!==false;
   const transient=(key,signature,duration=4500)=>{if(signature&&stateSignatures[key]!==signature){stateSignatures[key]=signature;stateUntil[key]=Date.now()+duration}if(!signature)stateSignatures[key]='';return Boolean(signature)&&Date.now()<(stateUntil[key]||0)};
   for(const el of [flagHud,startHud,pitHud,penaltyHud,damageHud,assistHud])el.style.display=editing&&enabled(el)?'block':'none';
+  if(editing){
+    if(enabled(flagHud)){flagHud.className='module stateModule flagModule yellow';flagHud.innerHTML='<span class="tag">Banderas</span><div>SECTOR 2</div>'}
+    if(enabled(startHud)){$('startContent').innerHTML=Array.from({length:5},()=>'<span class="startLamp on"></span>').join('')}
+    if(enabled(pitHud))$('pitContent').textContent='LIMITADOR DE BOXES - 80 km/h';
+    if(enabled(penaltyHud))$('penaltyContent').textContent='VUELTA INVALIDADA';
+    if(enabled(damageHud))$('damageContent').textContent='SUSPENSIÓN 60%';
+    if(enabled(assistHud))$('assistContent').textContent='DRS ACTIVO';
+    return;
+  }
   if(!shown)return;
 
   let flag='',cls='';
