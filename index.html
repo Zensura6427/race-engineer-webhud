@@ -205,4 +205,40 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
 /* La opacidad pertenece sólo al contenedor exterior. Las tarjetas que dan
    estructura y contraste a los datos permanecen legibles al 0 %. */
 .engine .gear,.engine .engineSpeed,.engine .engineStrip span,.engine .shiftLights{background-color:#050b12ed}.pedals .bar,.pedals .steerTrack{background-color:#172532ed}.tire,.compactMiniTire{background-color:#172532ed}.fuelMetric{background:#050d14ed}.relativeRow{background:#08121ded}.relativeRow:nth-child(even){background:#101e2bed}.relativeRow.player{background:#2c445bed}.lapCell{background:#070e17ed}.compactDash .compactPanel,.compactDash .compactGear,.compactDash .compactLights,.compactDash .compactAids span,.compactDash .compactTimes div{background:#0a0a0aed}.compactDash .compactMiniTires{background:#090f14e6}.fuelStrategyHead,.fuelStrategyFoot,.timingTitle,.lapHead{opacity:1}.fuel{width:108px;min-height:130px;overflow:visible}.fuelLaps{max-width:100px;text-align:center;font-size:17px}.fuel b{font-size:12px}.fuelGauge{background:#263646}.fuelIcon{color:#fff}.flagModule{box-sizing:border-box;width:154px;min-width:154px;min-height:84px;padding:12px;display:grid;place-items:center;white-space:normal;line-height:1.05}.radarCar{z-index:6}.opponent{z-index:5}.radarApproach{z-index:1}.radarSector{z-index:0}
-</style></body></html>
+/* El control de opacidad sólo modifica la superficie exterior. Los datos y
+   sus tarjetas conservan contraste completo, igual que en Crew Chief. */
+.engine{background:linear-gradient(145deg,rgb(2 4 6 / var(--module-opacity,1)),rgb(17 25 32 / var(--module-opacity,1)))}
+.compactGear{color:#fff!important}.compactGear.pitLimiterPulse{color:#111!important}
+</style><script>
+/* Radar efectivo: replica la geometria y la histeresis del spotter cartesiano
+   de Crew Chief para R3E. La parte grafica solo representa ese resultado. */
+renderRadar=d=>{
+ const field=$('radarField'),panel=document.querySelector('[data-id="Radar"]'),enabled=config.ShowRadar!==false;
+ field.querySelectorAll('.opponent,.radarApproach,.radarSector').forEach(e=>e.remove());
+ if(d.InPit){radarCarsLeft=0;radarCarsRight=0;$('radarLeft').style.opacity='0';$('radarRight').style.opacity='0';panel.style.display=enabled&&editing?'':'none';return}
+ const h=d.heading&&Number.isFinite(d.heading.x)&&Number.isFinite(d.heading.z)?d.heading:{x:0,z:1};
+ const zone=20,carWidth=1.8,carLength=3.5,longCarLength=4.5,behindExtra=.4,maxClosingKph=43.2,minOwnSeparation=7;
+ let detected=0,leftNear=0,rightNear=0,nextLeft=0,nextRight=0;const occupied=[];
+ (d.radar||[]).forEach(v=>{
+  if(v.inPitLane||!Number.isFinite(v.x)||!Number.isFinite(v.z)||v.id<0)return;
+  const lateral=h.z*v.x+h.x*v.z,longitudinal=h.z*v.z-h.x*v.x;
+  if(Math.abs(lateral)>=zone||Math.abs(longitudinal)>=zone)return;
+  detected++;
+  const side=lateral<0?'right':'left',wasOverlapping=side==='left'?radarCarsLeft>0:radarCarsRight>0;
+  const speedInRange=!Number.isFinite(v.speedKph)||!Number.isFinite(d.SpeedKph)||Math.abs(v.speedKph-d.SpeedKph)<maxClosingKph;
+  const overlap=wasOverlapping?Math.abs(longitudinal)<longCarLength:Math.abs(lateral)>carWidth&&speedInRange&&((longitudinal<0&&-longitudinal<carLength)||(longitudinal>0&&longitudinal<carLength+behindExtra));
+  const distance=Math.hypot(lateral,longitudinal),proximity=Math.max(0,1-distance/zone);
+  let screenX=50-lateral/zone*50,screenY=50+longitudinal/zone*50;
+  if(Math.hypot(screenX-50,screenY-50)<minOwnSeparation)screenX=50+(lateral<0?minOwnSeparation:-minOwnSeparation);
+  let guard=0;while(occupied.some(p=>Math.hypot(screenX-p.x,screenY-p.y)<6)&&guard++<4)screenY+=guard%2?6:-12;
+  occupied.push({x:screenX,y:screenY});
+  if(overlap){const strength=Math.max(.45,1-Math.abs(lateral)/zone);if(side==='right'){nextRight++;rightNear=Math.max(rightNear,strength)}else{nextLeft++;leftNear=Math.max(leftNear,strength)}}
+  const ring=Math.max(1,Math.min(4,Math.ceil(distance/5))),outer=ring*25,inner=(ring-1)*25,angle=Math.atan2(screenY-50,screenX-50)*180/Math.PI+90;
+  const sector=document.createElement('i');sector.className='radarSector';sector.style.background=`conic-gradient(from ${angle-45}deg,rgba(255,18,52,.78) 0deg,rgba(255,52,36,.58) 70deg,transparent 90deg)`;sector.style.webkitMask=`radial-gradient(circle,transparent 0 ${inner}%,#000 ${inner+1}% ${outer-1}%,transparent ${outer}%)`;sector.style.mask=sector.style.webkitMask;sector.style.opacity=(.58+proximity*.38).toFixed(2);field.appendChild(sector);
+  if(proximity>.12&&proximity<.55){for(let step=1;step<=2;step++){const glow=document.createElement('i'),t=step/3;glow.className='radarApproach';glow.style.left=(50+(screenX-50)*(1-t))+'%';glow.style.top=(50+(screenY-50)*(1-t))+'%';glow.style.opacity=(.16+proximity*.26).toFixed(2);field.appendChild(glow)}}
+  const car=document.createElement('i');car.className='opponent';car.style.left=screenX+'%';car.style.top=screenY+'%';car.style.background=overlap?'#ff253f':proximity>.55?'#ffb13b':'#f4f8fb';car.style.boxShadow=overlap?'0 0 0 1px #fff,0 0 8px #ff253f':proximity>.55?'0 0 0 1px #fff,0 0 7px #ff9b35':'0 0 0 1px #fff,0 0 5px #fff';field.appendChild(car)
+ });
+ radarCarsLeft=nextLeft;radarCarsRight=nextRight;$('radarLeft').style.opacity=leftNear||'0';$('radarRight').style.opacity=rightNear||'0';if(detected)radarLastSeen=Date.now();panel.style.display=enabled&&(editing||detected>0||Date.now()-radarLastSeen<900)?'':'none'
+};
+</script></body></html>
+
