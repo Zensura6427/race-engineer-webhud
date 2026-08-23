@@ -227,9 +227,15 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
    sus tarjetas conservan contraste completo, igual que en Crew Chief. */
 .engine{background:linear-gradient(145deg,rgb(2 4 6 / var(--module-opacity,1)),rgb(17 25 32 / var(--module-opacity,1)))}
 .compactGear{color:#fff!important}.compactGear.pitLimiterPulse{color:#111!important}
-/* La escala nace después de la marcha y termina antes de la instrumentación inferior. */
-.compactDash .compactBarArc{top:35px;height:85px;z-index:1;clip-path:path('M 88 85 C 98 48 109 16 126 0 L 441 0 L 441 32 L 126 32 C 112 40 101 62 88 85 Z')}
-.compactDash .compactBarArc i{height:85px}
+/* Dashboard final compacto: una banda de cambio fina conecta la cabecera con los datos. */
+.compactDash{height:215px}
+.compactDash .compactBarArc{top:35px;height:43px;z-index:1;clip-path:path('M 88 43 C 99 20 112 5 126 0 L 441 0 L 441 26 L 126 26 C 112 29 100 37 88 43 Z')}
+.compactDash .compactBarArc i{height:43px}
+.compactDash .compactAids span:nth-child(2){top:82px}
+.compactDash .compactAids span:nth-child(3){top:127px}
+.compactDash .compactFuelBox{top:173px}
+.compactDash .compactMiniTires{top:82px}
+.compactDash .compactTimes{top:82px}
 .compactDash .compactGear,.compactDash .compactPos,.compactDash .compactSpeedBox,.compactDash .compactRpmBox,.compactDash .compactLap{z-index:3}
 .compactDash .compactAids span,.compactDash .compactFuelBox,.compactDash .compactMiniTires,.compactDash .compactTimes{z-index:2}
 </style><script>
