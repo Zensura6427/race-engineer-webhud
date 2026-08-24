@@ -250,6 +250,68 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
 .compactDash .compactAids span:first-child{display:block;left:52px;top:124px;width:45px;height:42px;padding:4px 0 0 4px}
 .compactDash .compactGear,.compactDash .compactPos,.compactDash .compactSpeedBox,.compactDash .compactRpmBox,.compactDash .compactLap{z-index:3}
 .compactDash .compactAids span,.compactDash .compactFuelBox,.compactDash .compactMiniTires,.compactDash .compactTimes{z-index:2}
+
+/* Dashboard compacto bloqueado contra la referencia aprobada 447x257.
+   La banda conserva 47 px horizontales y únicamente desciende en la cuña izquierda. */
+.compactDash .compactSmallBox,.compactDash .compactBox{position:absolute;display:block!important;padding:0!important;text-align:center}
+.compactDash .compactSmallBox .compactLabel,.compactDash .compactBox .compactLabel{position:absolute;left:5px;top:4px;font-size:6px;line-height:1;letter-spacing:.05em}
+.compactDash .compactSmallBox b,.compactDash .compactBox b,.compactDash .compactRpmBox b{position:absolute!important;inset:0!important;display:grid;place-items:center;margin:0!important;padding-top:3px;font-size:15px;line-height:1;text-align:center!important}
+.compactDash .compactGear{left:5px;top:3px;width:80px;height:84px;font-size:56px}
+.compactDash .compactPos{left:103px;top:3px;width:44px;height:27px}
+.compactDash .compactShiftTarget{left:153px;top:3px;width:114px;height:27px}.compactDash .compactShiftTarget b{font-size:11px}
+.compactDash .compactIncidents{left:273px;top:3px;width:61px;height:27px}.compactDash .compactIncidents b{font-size:12px}
+.compactDash .compactLap{left:340px;top:3px;width:101px;height:27px}.compactDash .compactLap b{font-size:18px}
+.compactDash .compactSpeedBox{left:103px;top:34px;width:132px;height:34px}.compactDash .compactSpeedBox b{font-size:24px}
+.compactDash .compactRpmBox{left:241px;top:34px;width:200px;height:34px}.compactDash .compactRpmBox b{font-size:25px}
+.compactDash .compactBarArc{left:0;top:73px;width:441px;height:122px;z-index:1;clip-path:path('M 0 122 C 27 78 66 21 126 0 L 441 0 L 441 47 L 126 47 C 105 47 55 82 0 122 Z')}
+.compactDash .compactBarArc i{height:122px}
+.compactDash .compactAids span:first-child{display:block;left:52px;top:124px;width:45px;height:42px;padding:4px 0 0 4px}
+.compactDash .compactAids span:nth-child(2){left:103px;top:124px;width:38px;height:42px;padding:4px 0 0 4px}
+.compactDash .compactAids span:nth-child(3){left:52px;top:170px;width:89px;height:42px;padding:4px 0 0 5px}
+.compactDash .compactFuelBox{left:5px;top:216px;width:136px;height:37px}
+.compactDash .compactMiniTires{left:148px;top:124px;width:140px;height:129px}
+.compactDash .compactTimes{left:299px;top:124px;width:140px;height:129px;gap:4px}
+/* Ajuste final 1:1: ninguna tarjeta invade la banda de RPM.
+   Margenes exteriores de 5 px y separaciones horizontales de 6 px. */
+.compactDash .compactSmallBox .compactLabel,.compactDash .compactBox .compactLabel{left:4px;top:3px;font-size:5px}
+.compactDash .compactSmallBox b,.compactDash .compactBox b,.compactDash .compactRpmBox b{padding-top:0;place-items:center}
+.compactDash .compactPos{left:103px;top:3px;width:44px;height:27px}
+.compactDash .compactShiftTarget{left:153px;top:3px;width:114px;height:27px}
+.compactDash .compactIncidents{left:273px;top:3px;width:61px;height:27px}
+.compactDash .compactLap{left:340px;top:3px;width:101px;height:27px}
+.compactDash .compactSpeedBox{left:103px;top:34px;width:132px;height:34px}
+.compactDash .compactRpmBox{left:241px;top:34px;width:200px;height:34px}
+.compactDash .compactPos b{font-size:14px}.compactDash .compactShiftTarget b{font-size:11px}.compactDash .compactIncidents b{font-size:11px}.compactDash .compactLap b{font-size:17px}.compactDash .compactSpeedBox b{font-size:23px}.compactDash .compactRpmBox b{font-size:24px}
+.compactDash .compactAids span:first-child{left:5px;top:191px;width:31px;height:21px;padding:3px 0 0 3px}
+.compactDash .compactAids span:nth-child(2){left:40px;top:191px;width:31px;height:21px;padding:3px 0 0 3px}
+.compactDash .compactAids span:nth-child(3){left:75px;top:191px;width:66px;height:21px;padding:3px 0 0 4px}
+.compactDash .compactAids b{top:8px;font-size:11px}
+.compactDash .compactFuelBox{left:5px;top:216px;width:136px;height:37px}
+.compactDash .compactMiniTires{left:147px;top:124px;width:144px;height:129px}
+.compactDash .compactTimes{left:297px;top:124px;width:144px;height:129px;gap:4px}
+/* Geometria solicitada: ABS conserva su posicion y sus 42 px de altura.
+   TCS se coloca a la izquierda de BIAS, que solo se estrecha en horizontal. */
+.compactDash .compactAids span:first-child{left:52px;top:170px;width:38px;height:42px;padding:4px 0 0 4px}
+.compactDash .compactAids span:nth-child(2){left:103px;top:124px;width:38px;height:42px;padding:4px 0 0 4px}
+.compactDash .compactAids span:nth-child(3){left:96px;top:170px;width:45px;height:42px;padding:4px 0 0 4px}
+.compactDash .compactAids span{font-size:5px}
+.compactDash .compactAids b{top:15px;font-size:17px}
+/* La etiqueta ocupa una franja minima; el dato usa todo el ancho restante.
+   Esto mantiene iguales los margenes internos izquierdo y derecho. */
+.compactDash .compactSmallBox .compactLabel,.compactDash .compactBox .compactLabel{left:4px;top:2px;font-size:4px;line-height:4px}
+.compactDash .compactSmallBox b,.compactDash .compactBox b,.compactDash .compactRpmBox b{inset:7px 0 0!important;padding:0!important;place-items:center;text-align:center!important}
+/* Valores centrados en el rectangulo completo. Las etiquetas no reservan
+   altura: son una referencia secundaria y nunca desplazan el dato. */
+.compactDash .compactSmallBox b,.compactDash .compactBox b,.compactDash .compactRpmBox b{inset:0!important;padding:0!important;place-items:center;text-align:center!important}
+.compactDash .compactSmallBox .compactLabel,.compactDash .compactBox .compactLabel{left:4px;top:2px;font-size:4px;line-height:4px}
+.compactDash .compactPos b{font-size:13px}.compactDash .compactShiftTarget b{font-size:11px}.compactDash .compactIncidents b{font-size:11px}.compactDash .compactLap b{font-size:15px}.compactDash .compactSpeedBox b{font-size:22px}.compactDash .compactRpmBox b{font-size:22px}
+/* ABS baja lo minimo para liberar la banda. TCS aprovecha la cuña izquierda;
+   BIAS conserva espacio suficiente para el porcentaje completo. */
+.compactDash .compactAids span:first-child{left:42px;top:175px;width:43px;height:36px;padding:3px 0 0 4px}
+.compactDash .compactAids span:nth-child(2){left:103px;top:128px;width:38px;height:42px;padding:3px 0 0 4px}
+.compactDash .compactAids span:nth-child(3){left:90px;top:175px;width:51px;height:36px;padding:3px 0 0 4px}
+.compactDash .compactAids span{font-size:4px}
+.compactDash .compactAids b{inset:0;display:grid;place-items:center;font-size:14px;text-align:center}
 </style><script>
 /* Radar efectivo: replica la geometria y la histeresis del spotter cartesiano
    de Crew Chief para R3E. La parte grafica solo representa ese resultado. */
@@ -280,5 +342,38 @@ renderRadar=d=>{
   const car=document.createElement('i');car.className='opponent';car.style.left=screenX+'%';car.style.top=screenY+'%';car.style.background=overlap?'#ff253f':proximity>.55?'#ffb13b':'#f4f8fb';car.style.boxShadow=overlap?'0 0 0 1px #fff,0 0 8px #ff253f':proximity>.55?'0 0 0 1px #fff,0 0 7px #ff9b35':'0 0 0 1px #fff,0 0 5px #fff';field.appendChild(car)
  });
  radarCarsLeft=nextLeft;radarCarsRight=nextRight;$('radarLeft').style.opacity=leftNear||'0';$('radarRight').style.opacity=rightNear||'0';if(detected)radarLastSeen=Date.now();panel.style.display=enabled&&(editing||detected>0||Date.now()-radarLastSeen<900)?'':'none'
+};
+</script><style>
+/* Delta neutro en el centro; sólo se ilumina el tramo realmente ganado o perdido. */
+.deltaTrack{--delta-loss:0%;--delta-gain:0%;--delta-loss-alpha:0;--delta-gain-alpha:0;overflow:hidden;background:#263646}
+.deltaTrack:before,.deltaTrack:after{content:'';position:absolute;top:0;bottom:0;z-index:1;transition:width 80ms linear,background-color 80ms linear}
+.deltaTrack:before{right:50%;width:var(--delta-loss);background:rgb(227 72 85 / var(--delta-loss-alpha))}
+.deltaTrack:after{left:50%;width:var(--delta-gain);background:rgb(56 184 106 / var(--delta-gain-alpha))}
+.deltaMarker{z-index:2;transition:left 80ms linear,opacity 80ms linear}
+.delta.invalid,.compactDelta.invalid,.deltaValue.invalid{color:var(--muted)}
+</style><script>
+const updateWithProgressiveDelta=update;
+const formatExactDelta=value=>{
+ const sign=value>0?'+':value<0?'−':'',absolute=Math.abs(value);
+ if(absolute<60)return sign+absolute.toFixed(3);
+ if(absolute<3600)return sign+Math.floor(absolute/60)+':'+(absolute%60).toFixed(3).padStart(6,'0');
+ return sign+Math.floor(absolute/3600)+':'+String(Math.floor(absolute%3600/60)).padStart(2,'0')+':'+(absolute%60).toFixed(3).padStart(6,'0');
+};
+update=d=>{
+ updateWithProgressiveDelta(d);
+ const track=document.querySelector('.deltaTrack'),marker=$('deltaMarker'),raw=Number(d.delta);
+ const available=Number.isFinite(raw)&&raw>-999;
+ const magnitude=available?Math.min(48,Math.abs(raw)/2*48):0;
+ const intensity=available?Math.min(1,Math.abs(raw)/2):0;
+ track.style.setProperty('--delta-loss',available&&raw>0?magnitude+'%':'0%');
+ track.style.setProperty('--delta-gain',available&&raw<0?magnitude+'%':'0%');
+ track.style.setProperty('--delta-loss-alpha',available&&raw>0?intensity:'0');
+ track.style.setProperty('--delta-gain-alpha',available&&raw<0?intensity:'0');
+ marker.style.opacity=available?'1':'0';
+ marker.style.left=available?(50-Math.max(-1,Math.min(1,raw/2))*48)+'%':'50%';
+ const shown=available?formatExactDelta(raw):'—';
+ $('deltaHudValue').textContent=shown;$('deltaHudValue').className='deltaValue';
+ $('delta').textContent=shown;$('delta').className='delta '+(available&&raw<0?'good':available&&raw>0?'bad':'');
+ $('compactDelta').textContent=shown;$('compactDelta').className='compactDelta '+(available&&raw<0?'good':available&&raw>0?'bad':'');
 };
 </script></body></html>
