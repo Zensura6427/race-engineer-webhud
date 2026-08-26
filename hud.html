@@ -340,7 +340,7 @@ renderRadar=d=>{
  let detected=0,leftNear=0,rightNear=0,nextLeft=0,nextRight=0;const occupied=[];
  (d.radar||[]).forEach(v=>{
   if(v.inPitLane||!Number.isFinite(v.x)||!Number.isFinite(v.z)||v.id<0)return;
-  const lateral=h.z*v.x+h.x*v.z,longitudinal=d.simulator==='assetto-corsa-evo'?h.x*v.x-h.z*v.z:h.z*v.z-h.x*v.x;
+  const lateral=h.z*v.x+h.x*v.z,longitudinal=h.z*v.z-h.x*v.x;
   if(Math.abs(lateral)>=zone||Math.abs(longitudinal)>=zone)return;
   detected++;
   const side=lateral<0?'right':'left',wasOverlapping=side==='left'?radarCarsLeft>0:radarCarsRight>0;
