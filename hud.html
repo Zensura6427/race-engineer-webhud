@@ -379,7 +379,7 @@ const formatExactDelta=value=>{
 };
 update=d=>{
  updateWithProgressiveDelta(d);
- const track=document.querySelector('.deltaTrack'),marker=$('deltaMarker'),raw=Number(d.delta),display=-raw;
+ const track=document.querySelector('.deltaTrack'),marker=$('deltaMarker'),raw=Number(d.delta),display=raw;
  const available=Number.isFinite(raw)&&raw>-999;
  const magnitude=available?Math.min(48,Math.abs(raw)/2*48):0;
  const intensity=available?Math.min(1,Math.abs(raw)/2):0;
@@ -422,4 +422,5 @@ const updateWithFixedDigitalRpmGrid=update;update=d=>{updateWithFixedDigitalRpmG
 const updateWithLimiterStateColour=update;
 update=d=>{updateWithLimiterStateColour(d);const limiter=d.state?.pitLimiter>0,node=$('digitalLimiter');if(node)node.style.color=limiter?'#31ff43':'#ff3838'};
 </script></body></html>
+
 
