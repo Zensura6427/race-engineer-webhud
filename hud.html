@@ -277,7 +277,7 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
    estructura y contraste a los datos permanecen legibles al 0 %. */
 .engine .gear,.engine .engineSpeed,.engine .engineStrip span,.engine .shiftLights{background-color:#050b12ed}.pedals .bar,.pedals .steerTrack{background-color:#172532ed}.tire,.compactMiniTire{background-color:#172532ed}.fuelMetric{background:#050d14ed}.relativeRow{background:#08121ded}.relativeRow:nth-child(even){background:#101e2bed}.relativeRow.player{background:#2c445bed}.lapCell{background:#070e17ed}.compactDash .compactPanel,.compactDash .compactGear,.compactDash .compactLights,.compactDash .compactAids span,.compactDash .compactTimes div{background:#0a0a0aed}.compactDash .compactMiniTires{background:#090f14e6}.fuelStrategyHead,.fuelStrategyFoot,.timingTitle,.lapHead{opacity:1}.fuel{width:108px;min-height:130px;overflow:visible}.fuelLaps{max-width:100px;text-align:center;font-size:17px}.fuel b{font-size:12px}.fuelGauge{background:#263646}.fuelIcon{color:#fff}.flagModule{box-sizing:border-box;width:154px;min-width:154px;min-height:84px;padding:12px;display:grid;place-items:center;white-space:normal;line-height:1.05}.radarCar{z-index:6}.opponent{z-index:5}.radarApproach{z-index:1}.radarSector{z-index:0}
 /* El control de opacidad sólo modifica la superficie exterior. Los datos y
-   sus tarjetas conservan contraste completo, igual que en Crew Chief. */
+   sus tarjetas conservan contraste completo. */
 .engine{background:linear-gradient(145deg,rgb(2 4 6 / var(--module-opacity,1)),rgb(17 25 32 / var(--module-opacity,1)))}
 .compactGear{color:#fff!important}.compactGear.pitLimiterPulse{color:#111!important}
 /* Conserva exactamente la estructura y el tamaño originales de la barra. */
@@ -364,8 +364,8 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
 .compactDash .compactAids span{font-size:4px}
 .compactDash .compactAids b{inset:0;display:grid;place-items:center;font-size:14px;text-align:center}
 </style><script>
-/* Radar efectivo: replica la geometria y la histeresis del spotter cartesiano
-   de Crew Chief para R3E. La parte grafica solo representa ese resultado. */
+/* El radar representa las posiciones relativas y la proximidad de los coches
+   mediante la geometria y la histeresis del spotter cartesiano. */
 renderRadar=d=>{
  const field=$('radarField'),panel=document.querySelector('[data-id="Radar"]'),enabled=config.ShowRadar!==false;
  field.querySelectorAll('.opponent,.radarApproach,.radarSector').forEach(e=>e.remove());
