@@ -111,6 +111,19 @@
 <section class="module radar" data-id="Radar"><span class="tag">Radar</span><div class="radarField" id="radarField"><i class="radarRing r20"></i><i class="radarRing r15"></i><i class="radarRing r10"></i><i class="radarRing r5"></i><i class="radarAxis x"></i><i class="radarAxis y"></i><i id="radarLeft" class="radarSide left"></i><i id="radarRight" class="radarSide right"></i><i class="radarCar"></i></div></section>
 <section class="module deltaHud" data-id="Delta"><span class="tag">Delta y sectores</span><div id="deltaHudValue" class="deltaValue"></div><div class="deltaTrack"><i id="deltaMarker" class="deltaMarker" style="left:50%"></i></div><div id="sectorResult" class="sectorResult"></div></section>
 <section id="pitExitHud" class="module stateModule pitExitModule" data-id="PitExit"><span class="tag">Salida de boxes</span><div class="pitExitGrid"><div class="pitExitTitle">SALIDA DE BOXES · APROXIMADA</div><div class="pitExitSummary"><b id="pitExitPosition"></b><small id="pitExitCost"></small></div><div class="pitExitRow pitExitAhead"><span id="pitExitAheadName"></span><b id="pitExitAheadGap"></b></div><div class="pitExitRow pitExitBehind"><span id="pitExitBehindName"></span><b id="pitExitBehindGap"></b></div><div id="pitExitDetail" class="pitExitDetail"></div></div></section>
+<section class="module engineTemperatures" data-id="EngineTemperatures" aria-label="Temperaturas del motor">
+ <span class="tag">Temperaturas</span>
+ <div class="temperatureGauge" id="waterTemperatureGauge">
+  <svg viewBox="0 0 107 94" aria-hidden="true"><path class="temperatureTrack" d="M25.92 74.58 A39 39 0 1 1 81.08 74.58"/><path class="temperatureArc" pathLength="100" d="M25.92 74.58 A39 39 0 1 1 81.08 74.58"/>
+   <svg x="39.5" y="31" width="28" height="28" viewBox="0 0 28 28" class="temperatureIcon"><path d="M11 16.5V5a3 3 0 0 1 6 0v11.5a5 5 0 1 1-6 0Z M14 8v12 M20 6h3 M20 10h3 M20 14h3 M2 25q3-3 6 0t6 0t6 0t6 0"/></svg>
+  </svg><small>AGUA</small><b id="waterTemperatureValue">— °C</b>
+ </div>
+ <div class="temperatureGauge" id="oilTemperatureGauge">
+  <svg viewBox="0 0 107 94" aria-hidden="true"><path class="temperatureTrack" d="M25.92 74.58 A39 39 0 1 1 81.08 74.58"/><path class="temperatureArc" pathLength="100" d="M25.92 74.58 A39 39 0 1 1 81.08 74.58"/>
+   <svg x="39.5" y="31" width="28" height="28" viewBox="0 0 28 28" class="temperatureIcon"><path d="M3 11h11l4 4 7-4v5l-7 5H5l-2-10Z M7 11V6h8 M11 6V3 M3 13H1v7h4 M25 20q-3 4 0 5q3-1 0-5Z"/></svg>
+  </svg><small>ACEITE</small><b id="oilTemperatureValue">— °C</b>
+ </div>
+</section>
 <section class="module incidents" data-id="Incidents"><span class="tag">Incidentes</span><small>Incidentes</small><b id="incidentValue">0 / —</b></section>
 <section class="module sessionTime" data-id="SessionTime"><span class="tag">Tiempo de sesión</span><small>Tiempo de sesión</small><i class="sessionTimeDivider"></i><b id="sessionTimeValue">—</b></section>
 <section class="module controlNotices" data-id="ControlNotices"><span class="tag">Avisos</span><small id="controlNoticeLabel">TC</small><b id="controlNoticeValue">5</b></section>
@@ -202,11 +215,11 @@ function renderState(s,shown){
   if(assist&&enabled(assistHud)){$('assistContent').textContent=assist;assistHud.style.display='block'}
 }
 function compound(type,sub){if(sub===2)return['S','#e4475c'];if(sub===3)return['M','#e5c13d'];if(sub===4)return['H','#e8edf2'];if(sub===0)return['P','#e8edf2'];if(sub===1)return['A','#e5c13d'];return type===0?['O','#e5c13d']:type===1?['P','#e8edf2']:['?','#8a99a8']}
-function moduleEnabled(id){const value=config['Show'+id];return id==='Classification'||id==='LapCounter'?value===true:value!==false}
+function moduleEnabled(id){const value=config['Show'+id];if(id==='EngineTemperatures')return value===true;return id==='Classification'||id==='LapCounter'?value===true:value!==false}
 function applyLayout(force=false){const signature=JSON.stringify([config.ActiveLayout,config.Scale,config.Modules,modules.map(m=>config['Show'+m.dataset.id])]);if(!force&&signature===lastLayout)return;lastLayout=signature;const layouts=config.Modules||{};modules.forEach(m=>{const p=layouts[m.dataset.id]||{},alpha=Math.max(0,Math.min(1,p.Opacity??1));m.style.left=`${(p.X??.7)*100}%`;m.style.top=`${(p.Y??.8)*100}%`;m.style.transform=`scale(${(p.Scale??1)*(config.Scale||1)})`;m.style.opacity='1';m.style.setProperty('--module-opacity',alpha);m.classList.toggle('transparentSurface',alpha<=.001);const on=moduleEnabled(m.dataset.id);visible(m.dataset.id,on);document.querySelector(`[data-toggle="${m.dataset.id}"]`)?.classList.toggle('off',!on)});document.querySelectorAll('[data-layout]').forEach(b=>b.classList.toggle('active',Number(b.dataset.layout)===(config.ActiveLayout||1)));updateOpacityValue()}
 function visible(id,show){const m=document.querySelector(`[data-id="${id}"]`);if(!m)return;if(show===false)m.style.display='none';else if(id==='ControlNotices'&&editing)m.style.display='flex';else if(m.classList.contains('stateModule')&&editing)m.style.display='block';else m.style.display=''}
 const localApi=path=>'http://127.0.0.1:8078'+path;
- [['InputsGraph','Gráfica'],['FfbGraph','FFB'],['FuelStrategy','Comb. Pro'],['RelativeTiming','Relativos'],['PitExit','Salida boxes'],['Classification','Clasificación'],['LapCounter','Contador de vueltas'],['LapDetail','Vuelta'],['Incidents','Incidentes'],['SessionTime','Tiempo sesión'],['ControlNotices','Avisos'],['Radar','Radar'],['Delta','Delta'],['Flags','Banderas'],['Start','Semáforo'],['Pit','Boxes'],['Penalty','Penaliz.'],['Damage','Daños'],['Assist','Ayudas']].forEach(([id,label])=>{const reset=$('reset'),b=document.createElement('button');b.className='editButton';b.dataset.toggle=id;b.textContent=label;reset.parentElement.insertBefore(b,reset)});
+ [['EngineTemperatures','Temperaturas'],['InputsGraph','Gráfica'],['FfbGraph','FFB'],['FuelStrategy','Comb. Pro'],['RelativeTiming','Relativos'],['PitExit','Salida boxes'],['Classification','Clasificación'],['LapCounter','Contador de vueltas'],['LapDetail','Vuelta'],['Incidents','Incidentes'],['SessionTime','Tiempo sesión'],['ControlNotices','Avisos'],['Radar','Radar'],['Delta','Delta'],['Flags','Banderas'],['Start','Semáforo'],['Pit','Boxes'],['Penalty','Penaliz.'],['Damage','Daños'],['Assist','Ayudas']].forEach(([id,label])=>{const reset=$('reset'),b=document.createElement('button');b.className='editButton';b.dataset.toggle=id;b.textContent=label;reset.parentElement.insertBefore(b,reset)});
 document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const id=b.dataset.toggle,key='Show'+id,next=config[key]===false;config[key]=next;b.classList.toggle('off',!next);visible(id,next);fetch(localApi('/visibility'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,visible:next})}).catch(()=>{})}));
 document.querySelector('[data-toggle="Assist"]').textContent='DRS / Push-to-Pass';
 $('reset').addEventListener('click',e=>{e.stopPropagation();fetch(localApi('/layout/reset'),{method:'POST'}).catch(()=>{})});
@@ -277,7 +290,7 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
    estructura y contraste a los datos permanecen legibles al 0 %. */
 .engine .gear,.engine .engineSpeed,.engine .engineStrip span,.engine .shiftLights{background-color:#050b12ed}.pedals .bar,.pedals .steerTrack{background-color:#172532ed}.tire,.compactMiniTire{background-color:#172532ed}.fuelMetric{background:#050d14ed}.relativeRow{background:#08121ded}.relativeRow:nth-child(even){background:#101e2bed}.relativeRow.player{background:#2c445bed}.lapCell{background:#070e17ed}.compactDash .compactPanel,.compactDash .compactGear,.compactDash .compactLights,.compactDash .compactAids span,.compactDash .compactTimes div{background:#0a0a0aed}.compactDash .compactMiniTires{background:#090f14e6}.fuelStrategyHead,.fuelStrategyFoot,.timingTitle,.lapHead{opacity:1}.fuel{width:108px;min-height:130px;overflow:visible}.fuelLaps{max-width:100px;text-align:center;font-size:17px}.fuel b{font-size:12px}.fuelGauge{background:#263646}.fuelIcon{color:#fff}.flagModule{box-sizing:border-box;width:154px;min-width:154px;min-height:84px;padding:12px;display:grid;place-items:center;white-space:normal;line-height:1.05}.radarCar{z-index:6}.opponent{z-index:5}.radarApproach{z-index:1}.radarSector{z-index:0}
 /* El control de opacidad sólo modifica la superficie exterior. Los datos y
-   sus tarjetas conservan contraste completo. */
+   sus tarjetas conservan contraste completo, igual que en Crew Chief. */
 .engine{background:linear-gradient(145deg,rgb(2 4 6 / var(--module-opacity,1)),rgb(17 25 32 / var(--module-opacity,1)))}
 .compactGear{color:#fff!important}.compactGear.pitLimiterPulse{color:#111!important}
 /* Conserva exactamente la estructura y el tamaño originales de la barra. */
@@ -364,8 +377,8 @@ renderRadar=d=>{const field=$('radarField'),panel=document.querySelector('[data-
 .compactDash .compactAids span{font-size:4px}
 .compactDash .compactAids b{inset:0;display:grid;place-items:center;font-size:14px;text-align:center}
 </style><script>
-/* El radar representa las posiciones relativas y la proximidad de los coches
-   mediante la geometria y la histeresis del spotter cartesiano. */
+/* Radar efectivo: replica la geometria y la histeresis del spotter cartesiano
+   de Crew Chief para R3E. La parte grafica solo representa ese resultado. */
 renderRadar=d=>{
  const field=$('radarField'),panel=document.querySelector('[data-id="Radar"]'),enabled=config.ShowRadar!==false;
  field.querySelectorAll('.opponent,.radarApproach,.radarSector').forEach(e=>e.remove());
@@ -456,6 +469,30 @@ const updateWithFixedDigitalRpmGrid=update;update=d=>{updateWithFixedDigitalRpmG
 </style><script>
 const updateWithLimiterStateColour=update;
 update=d=>{updateWithLimiterStateColour(d);const limiter=d.state?.pitLimiter>0,node=$('digitalLimiter');if(node)node.style.color=limiter?'#31ff43':'#ff3838'};
+</script><style>
+.engineTemperatures{width:250px;height:156px;padding:11px;display:grid;grid-template-columns:107px 107px;gap:12px}
+.temperatureGauge{width:107px;height:132px;display:grid;grid-template-rows:94px 12px 26px;text-align:center;font-variant-numeric:tabular-nums}
+.temperatureGauge>svg{display:block;width:107px;height:94px;overflow:hidden}
+.temperatureTrack,.temperatureArc{fill:none;stroke:#374859;stroke-width:5;stroke-linecap:round}
+.temperatureArc{stroke:var(--green);stroke-dasharray:0 100}
+.temperatureIcon{fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.temperatureGauge small{font-size:10px;font-weight:700;line-height:12px;color:var(--text)}
+.temperatureGauge b{font-size:23px;font-weight:800;line-height:26px;white-space:nowrap;color:var(--text)}
+.temperatureGauge.hot .temperatureArc,.temperatureGauge.hot .temperatureIcon{stroke:var(--red)}
+.temperatureGauge.hot b{color:var(--red)}
+</style><script>
+function updateEngineTemperatures(d){
+ const t=d.engineTemperatures||{};
+ for(const [id,key,min,max] of [['water','water',40,140],['oil','oil',40,160]]){
+  const value=Number(t[key]),limit=Number(t[key+'Limit']),valid=Number.isFinite(value)&&value>0;
+  const gauge=$(id+'TemperatureGauge'),fraction=valid?Math.max(0,Math.min(1,(value-min)/(max-min))):0;
+  $(id+'TemperatureValue').textContent=valid?Math.round(value)+' °C':'— °C';
+  gauge.classList.toggle('hot',valid&&Number.isFinite(limit)&&limit>0&&value>limit);
+  gauge.querySelector('.temperatureArc').style.strokeDasharray=(fraction*100)+' 100';
+ }
+}
+const updateWithEngineTemperatures=update;
+update=d=>{updateWithEngineTemperatures(d);updateEngineTemperatures(d)};
 </script></body></html>
 
 
